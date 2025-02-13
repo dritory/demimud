@@ -4,17 +4,16 @@ use std::{
 };
 
 use inflector::Inflector;
-use string_interner::StringInterner;
 
 use crate::{
-    components::{Components, EntityComponentInfo, EntityType, GeneralData, InternComponent},
+    components::{Components, EntityComponentInfo, EntityType, GeneralData, InternComponent, MyStringInterner},
     world::{Gender, Vnum},
 };
 
 pub(crate) struct EntityWorld {
     id_generator: IdGenerator,
     // FIXME
-    pub interner: StringInterner,
+    pub interner: MyStringInterner,
     entities: HashMap<RawEntityId, Entity>,
     player_entities: HashMap<String, RawEntityId>,
     player_locations: BTreeMap<String, RawEntityId>,
@@ -92,7 +91,7 @@ impl IdGenerator {
 
 impl EntityWorld {
     pub fn new() -> Self {
-        let mut interner = StringInterner::new();
+        let mut interner = MyStringInterner::new();
         let mut id_generator = IdGenerator {
             next_entity_id: NonZeroUsize::new(1).expect("1 != 0"),
         };
@@ -318,7 +317,7 @@ impl EntityWorld {
     pub fn entity_info_mut_with_interner(
         &mut self,
         entity_id: EntityId,
-    ) -> (EntityInfoMut<'_>, &'_ mut StringInterner) {
+    ) -> (EntityInfoMut<'_>, &'_ mut MyStringInterner) {
         let era = self.era;
         let raw_entity_id = self.raw_entity_id(entity_id);
         let entity = self
@@ -445,7 +444,7 @@ impl<'e> EntityInfoMut<'e> {
 
     pub fn set_short_description(
         &mut self,
-        interner: &mut StringInterner,
+        interner: &mut MyStringInterner,
         short_description: &str,
     ) {
         interner.set_short_description(&mut self.entity.components.act_info, short_description);

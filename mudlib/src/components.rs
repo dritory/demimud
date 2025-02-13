@@ -132,8 +132,10 @@ impl ComponentFromEntity for Shop {
     }
 }
 
+pub type MyStringInterner = StringInterner<string_interner::backend::StringBackend<string_interner::DefaultSymbol>>;
+
 pub(crate) struct EntityComponentInfo<'i, 'c> {
-    interner: &'i StringInterner,
+    interner: &'i MyStringInterner,
     components: &'c Components,
 }
 
@@ -149,7 +151,7 @@ pub(crate) trait InternComponent {
     ) -> Descriptions;
 }
 
-impl InternComponent for StringInterner {
+impl InternComponent for MyStringInterner {
     fn act_info(&mut self, keyword: &str, short_description: &str, gender: Gender) -> ActInfo {
         let mut intern = |string| IntStr {
             symbol: self.get_or_intern(string),
@@ -188,7 +190,7 @@ impl InternComponent for StringInterner {
 }
 
 impl<'i, 'c> EntityComponentInfo<'i, 'c> {
-    pub fn new(components: &'c Components, interner: &'i StringInterner) -> Self {
+    pub fn new(components: &'c Components, interner: &'i MyStringInterner) -> Self {
         Self {
             interner,
             components,

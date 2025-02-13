@@ -6,10 +6,8 @@
 
 use std::collections::HashMap;
 
-use string_interner::StringInterner;
-
 use crate::{
-    components::{Components, Door, EntityType, GeneralData, InternComponent, MobProg},
+    components::{Components, Door, EntityType, GeneralData, InternComponent, MobProg, MyStringInterner},
     entity::{EntityId, EntityWorld, PermanentEntityId},
     state::Area,
     world::{Gender, MobProgTrigger, Mobile, Object, ObjectFlags, ResetCommand, Vnum, World},
@@ -332,7 +330,7 @@ pub(crate) fn import_from_world(
 fn import_mobile_components(
     mobile: &Mobile,
     world: &World,
-    interner: &mut StringInterner,
+    interner: &mut MyStringInterner,
 ) -> (Components, Vec<Components>) {
     let mut mobprogs = Vec::with_capacity(mobile.mobprog_triggers.len());
 
@@ -445,7 +443,7 @@ fn import_mobile_components(
 
 fn import_object_components(
     object: &Object,
-    interner: &mut StringInterner,
+    interner: &mut MyStringInterner,
 ) -> (Components, Vec<Components>) {
     let mut extra_description_components = Vec::with_capacity(object.extra_descriptions.len());
 

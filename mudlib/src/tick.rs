@@ -1,6 +1,6 @@
-use string_interner::StringInterner;
-
+use crate::components::MyStringInterner;
 use crate::{agent::EntityAgent, commands::process_agent_command, WorldState};
+use rand::Rng;
 
 pub(super) fn update_entity_world(world_state: &mut WorldState) {
     update_wander(world_state);
@@ -18,7 +18,7 @@ pub(super) fn update_wander(world_state: &mut WorldState) {
     world_state.wander_ticks = 0;
 
     let entity_world = &mut world_state.entity_world;
-    let mut interner = StringInterner::default();
+    let mut interner = MyStringInterner::default();
 
     let mut wanderers = Vec::new();
 
@@ -35,7 +35,7 @@ pub(super) fn update_wander(world_state: &mut WorldState) {
         let room_id = entity_world.room_of(entity.entity_id());
         let room = entity_world.entity_info(room_id);
 
-        let random_exit = rand::random::<usize>() % 10;
+        let random_exit = rand::rng().random_range(0..10);
 
         if let Some(exit) = room.exits().nth(random_exit) {
             let entity_id = entity.entity_id();
